@@ -13,7 +13,11 @@ const outputFile = path.join(process.env.HOME || process.env.USERPROFILE, 'Docum
 function init() {
 	getStationsJson(url)
 		.then(response => JSON.parse(response))
-		.then(stations => generatePlaylist(generateTracks(stations)));
+		.then(stations => generatePlaylist(generateTracks(stations)))
+		.catch(error => {
+			console.log(`[-] An error occured while trying to get the stations: ${error}`);
+			process.exit(1);
+		});
 }
 
 function generateTracks(stations) {
@@ -29,7 +33,7 @@ function generateTracks(stations) {
 
 function generatePlaylist(tracks) {
 	const data = `<?xml version="1.0" encoding="UTF-8"?>
-<playlist version="1" xmlns = "http://xspf.org/ns/0/">
+<playlist version="1" xmlns="http://xspf.org/ns/0/">
 	<title>${playlistTitle}</title>
 	<creator>${playlistCreator}</creator>
 	<info>${playlistInfo}</info>
@@ -48,9 +52,9 @@ function generatePlaylist(tracks) {
 }
 
 function writePlaylist(data) {
-	fs.writeFile(outputFile, data, err => {
-		if (err) {
-			console.log(`[-] An error occured writing the file: ${err}`);
+	fs.writeFile(outputFile, data, error => {
+		if (error) {
+			console.log(`[-] An error occured writing the file: ${error}`);
 			process.exit(1);
 		}
 		console.log(`[+] Playlist saved to: ${outputFile}`);
