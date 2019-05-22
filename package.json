@@ -1,0 +1,14 @@
+{
+  "name": "juke-playlist",
+  "version": "0.0.1",
+  "description": "Generate a XSPF playlist file from all the JUKE.nl radio stations",
+  "author": "Ex-iT",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0"
+  }
+}
