@@ -22,11 +22,24 @@ function init() {
 
 function generateTracks(stations) {
 	return stations.map(station => {
+		let location = station.audioUrlAac;
+		if (station.audioUrlAac && station.audioUrlAac.indexOf('http://') === -1) {
+			location = encodeUri(station.audioUrl);
+		} else {
+			location = station.audioUrlAac ? encodeUri(station.audioUrlAac) : (station.audioUrl ? encodeUri(station.audioUrl) : encodeUri(station.tritonMount));
+		}
+
+		// Exceptions for bad Triton locations
+		const streamRegExp = /https?:\/\/\d+\.live.streamtheworld.com/;
+		if (station.type === 'triton' && location.match(streamRegExp)) {
+			location = location.replace(location.match(streamRegExp)[0], 'https://playerservices.streamtheworld.com/api/livestream-redirect');
+		}
+
 		return {
 			title: escapeHtml(station.name),
 			info: station.metadata ? escapeHtml(station.metadata.description) : '',
 			image: station.tile.imagePremium.url ? station.tile.imagePremium.url : station.tile.image.url,
-			location: station.audioUrlAac ? encodeUri(station.audioUrlAac) : (station.audioUrl ? encodeUri(station.audioUrl) : encodeUri(station.tritonMount))
+			location
 		};
 	});
 }
