@@ -41,6 +41,10 @@ function generateTracks(stations) {
 			image: station.tile.imagePremium.url ? station.tile.imagePremium.url : station.tile.image.url,
 			location
 		};
+	}).sort((a, b) => {
+		if (a.title < b.title) return -1;
+		if (a.title > b.title) return 1;
+		return 0;
 	});
 }
 
