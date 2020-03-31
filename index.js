@@ -38,7 +38,7 @@ function generateTracks(stations) {
 		return {
 			title: escapeHtml(station.name),
 			info: station.metadata ? escapeHtml(station.metadata.description) : '',
-			image: station.image.url ? station.image.url : '',
+			image: station.image.url ? `https:${station.image.url}` : '',
 			location
 		};
 	}).sort((a, b) => {
