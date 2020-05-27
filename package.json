@@ -1,6 +1,6 @@
 {
   "name": "juke-playlist",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Generate a XSPF playlist file from all the JUKE.nl radio stations",
   "author": "Ex-iT",
   "license": "ISC",
