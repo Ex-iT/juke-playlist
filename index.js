@@ -5,6 +5,7 @@ const fetch = require('node-fetch');
 
 const urlStations = `https://static.juke.nl/content/stations.json?preventCache=${new Date().getTime()}`;
 const urlStationBase = 'https://graph.talparad.io';
+const urlStream = 'https://playerservices.streamtheworld.com/api/livestream-redirect/';
 const apiKey = 'da2-evfzzjsvjjhy3isb6ursfis2ue';
 const filename = 'juke-stations.xspf';
 const playlistTitle = 'JUKE.nl Stations'
@@ -48,15 +49,18 @@ function getStationData(slug, metaDescription, profile = 'juke-web') {
 
 function generateTracks(stationsData) {
 	return stationsData
+		.filter(stationData => stationData.media.length)
 		.map(stationData => {
 			const { media, images } = stationData;
 			const logo = images.filter(image => image.imageType === 'logo');
+			let location = media.length ? media[0].uri : '';
+			location = /^[^http]/i.test(location) ? (urlStream + location) : location;
 
 			return {
 				title: encodeHtml(stationData.title || station.slug),
 				info: encodeHtml(stationsData.description || stationData.shortTitle || stationData.metaDescription || ''),
 				image: encodeHtml(logo.length ? logo[0].uri : (images[0].uri || '')),
-				media: encodeHtml(media.length ? media[0].uri : '')
+				media: encodeHtml(location)
 			};
 		}).sort((a, b) => {
 			if (a.title < b.title) return -1;
